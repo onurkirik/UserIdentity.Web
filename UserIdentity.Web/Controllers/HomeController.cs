@@ -132,6 +132,46 @@ namespace UserIdentity.Web.Controllers
             return RedirectToAction(nameof(ForgetPassword));
         }
 
+        public async Task<IActionResult> ResetPassword(string userId, string token)
+        {
+            TempData["userId"] = userId;
+            TempData["token"] = token;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel vm)
+        {
+            var userId = TempData["userId"].ToString();
+            var token = TempData["token"].ToString();
+
+            if (userId == null || token == null)
+                throw new Exception("Bir hata meydana geldi");
+
+            var hasUser = await _userManager.FindByIdAsync(userId);
+
+            if (hasUser == null)
+            {
+                ModelState.AddModelError(string.Empty, "Kullanıcı bulunamamıştır.");
+                return View();
+            }
+
+            var result = await _userManager.ResetPasswordAsync(hasUser, token, vm.Password);
+
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Şifreniz başarıyla yenilenmiştir.";
+            }
+            else
+            {
+                ModelState.AddModelErrorList(result.Errors.Select(x => x.Description).ToList());
+                return View();
+            }
+
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
