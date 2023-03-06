@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UserIdentity.Web.Areas.Admin.ViewModels;
 using UserIdentity.Web.Models;
 
 namespace UserIdentity.Web.Areas.Admin.Controllers
 {
+                    
+    [Authorize(Roles = "Yeni site Yöneticisi")]
     [Area("Admin")]
     public class HomeController : Controller
     {

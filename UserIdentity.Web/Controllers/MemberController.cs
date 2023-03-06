@@ -31,7 +31,8 @@ namespace UserIdentity.Web.Controllers
             {
                 Email = currentUser.Email,
                 PhoneNumber = currentUser.PhoneNumber,
-                UserName = currentUser.UserName
+                UserName = currentUser.UserName,
+                PictureUrl = currentUser.Picture,
             };
 
             return View(userViewModel);
@@ -160,6 +161,17 @@ namespace UserIdentity.Web.Controllers
 
             return View(userEditViewModel);
 
+        }
+
+        public IActionResult AccessDenied(string ReturnUrl)
+        {
+            var message = string.Empty;
+
+            message = "Bu sayfayı görmeye yetkiniz yoktur. Yetki almak için yöneticiniz ile görüşünüz.";
+
+            ViewBag.Message = message;
+
+            return View();
         }
     }
 }
